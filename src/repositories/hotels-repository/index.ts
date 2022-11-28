@@ -6,16 +6,30 @@ async function findHotel() {
 }
 
 async function findHotelByHotelId(hotelId: number) {
-  return prisma.hotel.findFirst({
+  const rooms = await prisma.room.findMany({
     where: {
-      id: hotelId,
+      hotelId
+    },
+    include: {
+      Hotel: true
     }
   });
+  return rooms;
+}
+
+async function validateHotelId(hotelId: number) {
+  const validateHotelId = await prisma.hotel.findFirst({
+    where: {
+      id: hotelId
+    }
+  });
+  return validateHotelId;
 }
 
 const paymentRepository = {
   findHotel,
   findHotelByHotelId,
+  validateHotelId,
 };
 
 export default paymentRepository;

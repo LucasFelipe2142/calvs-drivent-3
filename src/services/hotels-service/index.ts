@@ -1,7 +1,6 @@
 import { notFoundError } from "@/errors";
 import ticketRepository from "@/repositories/ticket-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
-import paymentRepository from "@/repositories/payment-repository";
 import hotelRepository from "@/repositories/hotels-repository";
 
 async function getHotels(userId: number) {
@@ -31,14 +30,20 @@ async function getHotelsByHotelId(hotelId: number) {
     throw notFoundError();
   }
 
-  console.log("hotels: ", hotels);
-
   return hotels;
+}
+
+async function validateHotelId(hotelId: number) {
+  const hotel = await hotelRepository.validateHotelId(hotelId);
+  if(!hotel) throw notFoundError();
+	
+  return hotel;
 }
 
 const enrollmentsService = {
   getHotels,
-  getHotelsByHotelId
+  getHotelsByHotelId,
+  validateHotelId
 };
 
 export default enrollmentsService;
